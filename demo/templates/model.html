@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Credit fairness - Simulation model</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index' %}">
+      <div class="sidebar-brand-text mx-3">Credit Fairness Simulation</sup></div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'index' %}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Simulation</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+      Presetting
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'setting' %}"  aria-expanded="true" aria-controls="collapseTwo">
+        <i class="fas fa-fw fa-cog"></i>
+        <span>Simulation setting</span>
+      </a>
+    </li>
+    <li class="nav-item active">
+      <a class="nav-link" href="{% url 'model' %}"  aria-expanded="true" aria-controls="collapseTwo">
+        <i class="fas fa-fw fa-cog"></i>
+        <span>Market model</span>
+      </a>
+    </li>
+  </ul>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- Main Content -->
+    <div id="content">
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid mt-4">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <h1 class="h2 mb-0 text-gray-800">Model setting</h1>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <form action="../model/" method="post">
+              {% csrf_token %}
+              <h4 class="mb-0 text-gray-800">Add bank</h4>
+              <br>
+              {{ Bform }}
+              <br>
+              <input class="btn btn-primary mt-2" type="submit" name="bank" value="Add bank">
+            </form>
+          </div>
+          <div class="col-6">
+            <form action="../model/" method="post">
+              {% csrf_token %}
+              <h4 class="mb-0 text-gray-800">Add applicant group</h4>
+              <br>
+              {{ AGform }}
+              <br>
+              <input class="btn btn-primary mt-2" type="submit" name="group" value="Add group">
+            </form>
+          </div>
+
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-6">
+            <div class="text-m font-weight-bold text-primary text-uppercase mb-1">Banks</div>
+            <ul class="list-group">
+              {% for bank in banks.all %}
+              <li class="list-group-item">Name: {{ bank.name }}<br>Color: {{ bank.color }} <br> Line style: {{ bank.line_style}}
+                <br> Low score interest rate: {{ bank.low_score_interest_rate }} <br> High score interest rate: {{ bank.high_score_interest_rate}}
+                <br> Score shift: {{ bank.score_shift }} <br> Utility repaid: {{ bank.utility_repaid }}
+                <br> Utility default: {{bank.utility_default }} <br> I-rate change up: {{bank.interest_change_up}} <br> I-rate change down: {{ bank.interest_change_down}}</li>
+                <form action="../model/" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-default btn-danger mb-3 mt-2" name="delete_bank" type="submit" value="{{bank.pk}}">Delete</button>
+                </form>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="col-6">
+            <div class="text-m font-weight-bold text-primary text-uppercase mb-1">Applicant groups</div>
+            <ul class="list-group">
+              {% for group in applicant_groups.all %}
+              <li class="list-group-item">Name: {{ group.name }}<br>Color: {{ group.color }} <br> Line style: {{ group.line_style}}
+                <br> Size: {{ group.size }} <br> Loan demand: {{ group.loan_demand }} <br> Error rate: {{ group.error_rate }}
+                <br> Score_error: {{group.score_error}} <br> Interest_rate_limit: {{group.interest_rate_limit}}</li>
+                <form action="../model/" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-default btn-danger mb-3 mt-2" name="delete_group" type="submit" value="{{group.pk}}">Delete</button>
+                </form>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+
+
+      </div>
+      <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+      <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+          <span>Made by <a href="mailto:jirkumic@gmail.com">Michal Jirků</a>, 2019</span>
+        </div>
+      </div>
+    </footer>
+    <!-- End of Footer -->
+
+  </div>
+  <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+
+
+<!-- Bootstrap core JavaScript-->
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+
+</body>
+
+</html>
